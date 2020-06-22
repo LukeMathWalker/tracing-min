@@ -14,4 +14,3 @@ tracing-subscriber = "0.2.6"
 opentelemetry = { version = "0.6.0" }
 opentelemetry-jaeger = { version = "0.5.0", features = ["collector_client"] }
 thrift = "0.13.0"
-thiserror = "1.0.20"

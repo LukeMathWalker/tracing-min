@@ -39,21 +39,19 @@ fn init_telemetry() {
     tracing::subscriber::set_global_default(subscriber).unwrap()
 }
 
-#[derive(thiserror::Error, Debug)]
-#[error("Test error: {0}")]
-pub struct DummyError(SpanTrace);
+#[derive(Debug)]
+pub struct Dummy(SpanTrace);
 
 #[tracing::instrument]
-pub fn test() -> Result<(), DummyError> {
-    let error = DummyError(SpanTrace::capture());
-    tracing::warn!("Something went wrong: {:?}", error);
-    Err(error)
+pub fn test() {
+    let culprit = Dummy(SpanTrace::capture());
+    tracing::warn!("It goes boom! - {:?}", culprit);
 }
 
 fn main() {
     init_telemetry();
-    let tracer = global::tracer("request");
-    tracer.in_span("middleware", move |_cx| {
+    let tracer = global::tracer("test");
+    tracer.in_span("span", move |_cx| {
         let _ = test();
     });
 }
